@@ -6,7 +6,6 @@ const server = createServer();
 
 // Use express middleware to handle cookies (jwt)
 // Use express middleware to populate current user
-
 server.start(
   {
     cors: {
@@ -15,6 +14,8 @@ server.start(
     }
   },
   details => {
-    console.log(`Server running on port ${details.port}`);
+    console.log(
+      `Server is now running on port http://localhost:${details.port}`
+    );
   }
 );
