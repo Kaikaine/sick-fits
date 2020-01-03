@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import styled from "styled-components";
-import Item from "./Item";
-import Pagination from "./Pagination";
-import { perPage } from "../config";
+import React, { Component } from 'react';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+import styled from 'styled-components';
+import Item from './Item';
+import Pagination from './Pagination';
+import { perPage } from '../config';
 
 const ALL_ITEMS_QUERY = gql`
-  query ALL_ITEMS_QUERY($skip: Int = 0 $first: Int = ${perPage}) {
-    items(first: $first skip: $skip orderBy: createdAt_DESC) {
+  query ALL_ITEMS_QUERY($skip: Int = 0, $first: Int = ${perPage}) {
+    items(first: $first, skip: $skip, orderBy: createdAt_DESC) {
       id
       title
       price
@@ -32,28 +32,22 @@ const ItemsList = styled.div`
 `;
 
 class Items extends Component {
-  state = {};
   render() {
     return (
       <Center>
         <Pagination page={this.props.page} />
         <Query
-          fetchPolicy="network-only"
           query={ALL_ITEMS_QUERY}
+          // fetchPolicy="network-only"
           variables={{
-            skip: this.props.page * perPage - perPage
+            skip: this.props.page * perPage - perPage,
           }}
         >
           {({ data, error, loading }) => {
-            console.log(data);
             if (loading) return <p>Loading...</p>;
             if (error) return <p>Error: {error.message}</p>;
             return (
-              <ItemsList>
-                {data.items.map(item => {
-                  return <Item key={item.id} item={item} />;
-                })}
-              </ItemsList>
+              <ItemsList>{data.items.map(item => <Item item={item} key={item.id} />)}</ItemsList>
             );
           }}
         </Query>
